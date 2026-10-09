@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
@@ -34,8 +36,12 @@ import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.fragment.app.FragmentActivity
+import com.example.test.util.BiometricHelper
+import com.example.test.util.BiometricStatus
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -211,6 +217,84 @@ fun SettingsScreen() {
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
+            }
+
+            // Security & Biometrics Section
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium,
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Icon(Icons.Default.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column {
+                                Text(
+                                    text = "Biometric Lock",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "Require fingerprint, face ID, or device PIN to open app",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Switch(
+                            checked = uiState.isBiometricEnabled,
+                            onCheckedChange = { targetState ->
+                                val activity = context as? FragmentActivity
+                                val status = BiometricHelper.canAuthenticate(context)
+
+                                when (status) {
+                                    BiometricStatus.SUCCESS -> {
+                                        if (activity != null) {
+                                            BiometricHelper.showBiometricPrompt(
+                                                activity = activity,
+                                                title = if (targetState) "Enable Biometric Lock" else "Disable Biometric Lock",
+                                                subtitle = "Authenticate to confirm security change",
+                                                onSuccess = {
+                                                    viewModel.onBiometricToggleChange(targetState)
+                                                    viewModel.showStatusMessage(
+                                                        if (targetState) "Biometric Lock enabled successfully." else "Biometric Lock disabled."
+                                                    )
+                                                },
+                                                onError = { error ->
+                                                    viewModel.showStatusMessage("Authentication failed: $error")
+                                                }
+                                            )
+                                        } else {
+                                            viewModel.onBiometricToggleChange(targetState)
+                                        }
+                                    }
+                                    BiometricStatus.NONE_ENROLLED -> {
+                                        viewModel.showStatusMessage("No biometrics or device PIN set up. Please enable security in Android Settings.")
+                                    }
+                                    BiometricStatus.NO_HARDWARE -> {
+                                        viewModel.showStatusMessage("Biometric hardware not available on this device.")
+                                    }
+                                    else -> {
+                                        viewModel.showStatusMessage("Biometric authentication is not supported on this device.")
+                                    }
+                                }
+                            }
                         )
                     }
                 }

@@ -28,7 +28,12 @@ class SettingsViewModel(
     private val exportCsvUseCase: ExportCsvUseCase = ExportCsvUseCase()
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SettingsUiState(themeMode = userPreferences.getThemeMode()))
+    private val _uiState = MutableStateFlow(
+        SettingsUiState(
+            themeMode = userPreferences.getThemeMode(),
+            isBiometricEnabled = userPreferences.isBiometricEnabled()
+        )
+    )
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
     init {
@@ -43,11 +48,25 @@ class SettingsViewModel(
                 }
             }
         }
+        viewModelScope.launch {
+            userPreferences.isBiometricEnabled.collect { isEnabled ->
+                _uiState.update { it.copy(isBiometricEnabled = isEnabled) }
+            }
+        }
     }
 
     fun onThemeModeChange(mode: String) {
         userPreferences.setThemeMode(mode)
         _uiState.update { it.copy(themeMode = mode) }
+    }
+
+    fun onBiometricToggleChange(enabled: Boolean) {
+        userPreferences.setBiometricEnabled(enabled)
+        _uiState.update { it.copy(isBiometricEnabled = enabled) }
+    }
+
+    fun showStatusMessage(message: String) {
+        _uiState.update { it.copy(exportStatusMessage = message) }
     }
 
     fun onOpenAddCategoryDialog() {

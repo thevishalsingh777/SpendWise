@@ -5,6 +5,7 @@ import com.example.test.domain.model.CategoryType
 
 data class SettingsUiState(
     val themeMode: String = "SYSTEM", // "SYSTEM", "LIGHT", "DARK"
+    val isBiometricEnabled: Boolean = false,
     val currencySymbol: String = "₹",
     val categories: List<Category> = emptyList(),
     val showAddCategoryDialog: Boolean = false,
