@@ -1,82 +1,72 @@
 SpendWise
-SpendWise is a modern Android expense-tracking application built with Kotlin and Jetpack Compose. It helps users record transactions, organize spending by category, manage budgets, and analyze financial activity.
+=========
+
+SpendWise is an Android application for tracking personal finances. It is built with Kotlin and Jetpack Compose, with a layered data, domain, and presentation structure.
 
 Features
-Track income and expenses
-Categorize transactions
-Create and manage budgets
-View financial summaries and spending insights
-Filter and review transaction history
-Analyze spending through charts and analytics
-Export expense data to CSV
-Secure app access with biometric authentication
-Store data locally using Room
-Customize preferences and app settings
-Support for light and dark themes
-Tech Stack
-Kotlin
-Jetpack Compose
-Material 3
-MVVM architecture
-Room database
-Kotlin Coroutines and Flow
-Navigation Compose
-AndroidX Lifecycle and ViewModel
-KSP
-Biometric authentication
-JUnit, Espresso, and Compose UI testing
+--------
+- Record and review financial transactions.
+- Organize transactions by category and filter transaction history.
+- Create and manage budgets.
+- View financial summaries, analytics, and spending insights.
+- Export transaction data to CSV.
+- Store app data locally using Room.
+- Use biometric authentication where supported.
+- Configure app settings and preferences.
+
+Technology
+----------
+- Kotlin
+- Android SDK 35; minimum Android version: Android 7.0 (API 24)
+- Jetpack Compose and Material 3
+- Navigation Compose and AndroidX Lifecycle/ViewModel
+- Room database with KSP
+- AndroidX Biometric
+- Gradle Kotlin DSL
+
 Requirements
-Android Studio with an Android Gradle Plugin-compatible SDK
-JDK 11 or newer
-Android SDK 35
-Android device or emulator running Android 7.0 (API 24) or newer
+------------
+- Android Studio with support for this project's Android Gradle Plugin and Kotlin versions.
+- JDK 11 or newer.
+- Android SDK 35.
+- An emulator or device running Android 7.0 (API 24) or newer.
+
 Getting Started
-Clone the repository:
-bash
-git clone https://github.com/thevishalsingh777/SpendWise.git
-cd SpendWise
-Open the project in Android Studio.
+---------------
+1. Clone the repository:
 
-Allow Gradle to synchronize the project and download dependencies.
+   git clone https://github.com/thevishalsingh777/SpendWise.git
+   cd SpendWise
 
-Build and run the app:
+2. Open the project in Android Studio and allow Gradle to sync.
+3. Run the app from Android Studio on an emulator or connected device.
 
-bash
-./gradlew assembleDebug
-Alternatively, select the app configuration and run it on an emulator or connected Android device.
+To build a debug APK from the command line:
 
-Project Structure
-Text
-app/src/main/java/com/example/test/
-├── data/
-│   ├── local/          # Room entities, DAOs, database, and mappers
-│   ├── preferences/    # Application preferences
-│   └── repository/     # Repository implementations
-├── domain/
-│   ├── model/          # Business models
-│   ├── repository/     # Repository interfaces
-│   └── usecase/        # Financial calculations and CSV export
-├── presentation/
-│   ├── components/     # Shared Compose components
-│   ├── navigation/     # App navigation
-│   ├── screens/        # Application screens
-│   └── theme/          # Presentation-level theming
-└── ui/theme/           # Jetpack Compose theme definitions
-Main Screens
-Home: Overview of balances and recent activity
-Transactions: Transaction history and filtering
-Add/Edit: Create or update transactions
-Budgets: Set and monitor category budgets
-Analytics: Visualize spending patterns
-Settings: Configure app preferences and security
+   ./gradlew assembleDebug
+
+On Windows, use:
+
+   gradlew.bat assembleDebug
+
 Testing
-Run unit tests:
+-------
+Run local unit tests:
 
-bash
-./gradlew test
-Run instrumented tests:
+   ./gradlew test
 
-bash
-./gradlew connectedAndroidTest
+Run instrumented tests on a connected device or emulator:
+
+   ./gradlew connectedAndroidTest
+
+Project Layout
+--------------
+app/src/main/java/com/example/test/
+  data/          Local storage, preferences, and repository implementations
+  domain/        Business models, repository interfaces, and use cases
+  presentation/  Navigation, screens, and shared UI components
+  ui/theme/      Compose theme resources
+
 License
-This project currently does not specify a license. Add a license file if you intend to make the repository available for public reuse.
+-------
+No license is currently specified in this repository. Unless a license is added, standard copyright restrictions apply.
